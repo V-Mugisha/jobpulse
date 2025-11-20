@@ -1,6 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
+let _tabsInitialized = false;
+
+function initTabs() {
+  // Avoid double initialization
+  if (_tabsInitialized) return;
+
   const tabButtons = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
+
+  if (!tabButtons.length) return; // components might not be loaded yet
+
+  _tabsInitialized = true;
 
   function activate(tabName) {
     tabButtons.forEach((btn) => {
@@ -39,4 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // expose a default active tab (first one) if none is active
   const anyActive = Array.from(tabButtons).some((b) => b.classList.contains('active'));
   if (!anyActive && tabButtons[0]) activate(tabButtons[0].dataset.tab);
-});
+}
+
+document.addEventListener('DOMContentLoaded', initTabs);
+document.addEventListener('components:loaded', initTabs);

@@ -491,3 +491,112 @@ h6 {
     margin-top: 8px;
   }
 }
+
+/* ===== Top Skills UI ===== */
+.skills-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 3px 10px rgba(16, 24, 40, 0.03);
+}
+
+.skills-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.skill-rank {
+  width: 28px;
+  color: #6b7280;
+}
+.skill-name {
+  width: 220px;
+  color: #0f1724;
+}
+.skill-bar {
+  position: relative;
+  flex: 1 1 auto;
+  height: 12px;
+  background: #eef2f7;
+  border-radius: 999px;
+}
+.skill-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #174cff, #0f4efc);
+  border-radius: 999px;
+}
+.skill-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  width: 120px;
+}
+.skill-count {
+  color: #6b7280;
+  font-size: 13px;
+}
+.skill-pct {
+  background: #f3f4f6;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #374151;
+  margin-top: 6px;
+}
+
+.key-insights {
+  margin-top: 22px;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+}
+.key-insights h4 {
+  margin: 0 0 10px 0;
+}
+.key-insights ul {
+  list-style: none;
+  padding-left: 0;
+  color: #475569;
+}
+.key-insights ul li {
+  margin: 8px 0;
+}
+
+@media (max-width: 980px) {
+  .skill-name {
+    width: 160px;
+  }
+  .skill-meta {
+    width: 110px;
+  }
+}
+
+@media (max-width: 640px) {
+  .skill-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .skill-name {
+    width: auto;
+    margin-bottom: 8px;
+  }
+  .skill-meta {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

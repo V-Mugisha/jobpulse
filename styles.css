@@ -258,6 +258,84 @@ h6 {
   display: block;
 }
 
+/* Filters panel */
+.filters-panel {
+  display: none;
+}
+.filters-panel.open {
+  display: block;
+}
+.filters-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+}
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.filter-group h4 {
+  margin-bottom: 10px;
+  color: #0f1724;
+}
+.filter-group label {
+  display: block;
+  margin: 8px 0;
+  color: #374151;
+}
+.salary-range .range-values {
+  display: flex;
+  justify-content: space-between;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+.range-inputs {
+  display: flex;
+  gap: 6px;
+}
+.range-inputs input[type="range"] {
+  width: 100%;
+}
+
+.salary-range .salary-inputs {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.salary-range .salary-input {
+  flex: 1 1 0;
+}
+.salary-range .salary-input input[type="number"] {
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e6e8;
+  background: #fff;
+  font-size: 15px;
+  color: #111827;
+}
+.filters-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .filters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .results-controls {
   display: flex;
   gap: 18px;

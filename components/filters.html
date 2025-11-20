@@ -1,0 +1,53 @@
+<div class="filters-panel open" role="region" aria-hidden="false">
+    <div class="container">
+        <div class="filters-card">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <h4>Employment Type</h4>
+                    <label><input type="checkbox" name="employment" value="remote" />
+                        Remote</label>
+                    <label><input type="checkbox" name="employment" value="on-site" />
+                        On-site</label>
+                    <label><input type="checkbox" name="employment" value="hybrid" />
+                        Hybrid</label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Experience Level</h4>
+                    <label><input type="checkbox" name="experience" value="junior" />
+                        Junior</label>
+                    <label><input type="checkbox" name="experience" value="mid" />
+                        Mid-Level</label>
+                    <label><input type="checkbox" name="experience" value="senior" />
+                        Senior</label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Salary Range (K)</h4>
+                    <div class="salary-range">
+                        <div class="range-values">
+                            <span class="min-val">$80K</span>
+                            <span class="max-val">$145K</span>
+                        </div>
+                        <div class="salary-inputs">
+                            <div class="salary-input">
+                                <input type="number" class="range-min" value="80" min="0" max="200"
+                                    aria-label="Minimum salary in thousands" />
+                            </div>
+                            <div class="salary-input">
+                                <input type="number" class="range-max" value="145" min="0" max="200"
+                                    aria-label="Maximum salary in thousands" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-actions">
+                <button class="btn primary" type="button" data-action="apply-filters">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
     <title>Job Market Analyzer</title>
 
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -65,103 +65,116 @@
 
     <section class="results">
         <div class="container">
-            <nav class="tabs" role="navigation" aria-label="results tabs">
+            <nav class="tabs" role="tablist" aria-label="results tabs">
                 <ul>
-                    <li class="active">
-                        <span data-lucide="briefcase"></span>
-                        Job Listings
+                    <li>
+                        <button class="tab-btn active" data-tab="job-listings" role="tab" aria-selected="true">
+                            <span data-lucide="briefcase"></span>
+                            Job Listings
+                        </button>
                     </li>
                     <li>
-                        <span data-lucide="bar-chart-2"></span>
-                        Salary Analytics
+                        <button class="tab-btn" data-tab="salary-analytics" role="tab" aria-selected="false">
+                            <span data-lucide="bar-chart-2"></span>
+                            Salary Analytics
+                        </button>
                     </li>
                     <li>
-                        <span data-lucide="trending-up"></span>
-                        Top Skills
+                        <button class="tab-btn" data-tab="top-skills" role="tab" aria-selected="false">
+                            <span data-lucide="trending-up"></span>
+                            Top Skills
+                        </button>
                     </li>
                 </ul>
             </nav>
 
-            <div class="results-controls">
-                <input class="search-in-results" type="search" placeholder="Search in results..." />
-                <div class="sort-wrap">
-                    <label for="sort">Sort by:</label>
-                    <select id="sort" class="sort-select">
-                        <option>Recently Posted</option>
-                        <option>Highest Salary</option>
-                        <option>Most Relevant</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="job-list">
-                <section class="job-card">
-                    <div class="job-left">
-                        <h3 class="job-title">Senior Frontend Engineer</h3>
-                        <div class="company">TechCorp</div>
-                        <div class="job-meta">
-                            <span class="meta-item"><span data-lucide="map-pin"></span> San Francisco, CA</span>
-                            <span class="meta-item">$ $180K - $220K</span>
-                            <span class="tag-pill">Remote</span>
+            <div class="tab-panels">
+                <section class="tab-panel active" data-tab="job-listings">
+                    <div class="results-controls">
+                        <input class="search-in-results" type="search" placeholder="Search in results..." />
+                        <div class="sort-wrap">
+                            <label for="sort">Sort by:</label>
+                            <select id="sort" class="sort-select">
+                                <option>Recently Posted</option>
+                                <option>Highest Salary</option>
+                                <option>Most Relevant</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="job-right">
-                        <div class="timestamp">2 days ago</div>
-                        <button class="btn secondary view-btn">
-                            View Details
-                            <span data-lucide="external-link"></span>
-                        </button>
+
+                    <div class="job-list">
+                        <article class="job-card">
+                            <div class="job-left">
+                                <h3 class="job-title">Senior Frontend Engineer</h3>
+                                <div class="company">TechCorp</div>
+                                <div class="job-meta">
+                                    <span class="meta-item"><span data-lucide="map-pin"></span> San Francisco,
+                                        CA</span>
+                                    <span class="meta-item">$ $180K - $220K</span>
+                                    <span class="tag-pill">Remote</span>
+                                </div>
+                            </div>
+                            <div class="job-right">
+                                <div class="timestamp">2 days ago</div>
+                                <button class="btn secondary view-btn">
+                                    View Details <span data-lucide="external-link"></span>
+                                </button>
+                            </div>
+                        </article>
+
+                        <article class="job-card">
+                            <div class="job-left">
+                                <h3 class="job-title">Product Manager</h3>
+                                <div class="company">StartupXYZ</div>
+                                <div class="job-meta">
+                                    <span class="meta-item"><span data-lucide="map-pin"></span> New York, NY</span>
+                                    <span class="meta-item">$ $150K - $180K</span>
+                                    <span class="tag-pill">Hybrid</span>
+                                </div>
+                            </div>
+                            <div class="job-right">
+                                <div class="timestamp">1 day ago</div>
+                                <button class="btn secondary view-btn">
+                                    View Details <span data-lucide="external-link"></span>
+                                </button>
+                            </div>
+                        </article>
+
+                        <article class="job-card">
+                            <div class="job-left">
+                                <h3 class="job-title">Junior Developer</h3>
+                                <div class="company">WebStudio</div>
+                                <div class="job-meta">
+                                    <span class="meta-item"><span data-lucide="map-pin"></span> Remote</span>
+                                    <span class="meta-item">$ $80K - $110K</span>
+                                    <span class="tag-pill">Remote</span>
+                                </div>
+                            </div>
+                            <div class="job-right">
+                                <div class="timestamp">3 days ago</div>
+                                <button class="btn secondary view-btn">
+                                    View Details <span data-lucide="external-link"></span>
+                                </button>
+                            </div>
+                        </article>
                     </div>
                 </section>
 
-                <section class="job-card">
-                    <div class="job-left">
-                        <h3 class="job-title">Product Manager</h3>
-                        <div class="company">StartupXYZ</div>
-                        <div class="job-meta">
-                            <span class="meta-item">
-                                <span data-lucide="map-pin"></span>
-                                New York, NY
-                            </span>
-                            <span class="meta-item">$ $150K - $180K</span>
-                            <span class="tag-pill">Hybrid</span>
-                        </div>
-                    </div>
-                    <div class="job-right">
-                        <div class="timestamp">1 day ago</div>
-                        <button class="btn secondary view-btn">
-                            View Details
-                            <span data-lucide="external-link"></span>
-                        </button>
-                    </div>
+                <section class="tab-panel" data-tab="salary-analytics">
+                    <h2>Salary Analytics</h2>
+                    <p>Placeholder content for Salary Analytics.</p>
                 </section>
 
-                <section class="job-card">
-                    <div class="job-left">
-                        <h3 class="job-title">Junior Developer</h3>
-                        <div class="company">WebStudio</div>
-                        <div class="job-meta">
-                            <span class="meta-item">
-                                <span data-lucide="map-pin"></span>
-                                Remote
-                            </span>
-                            <span class="meta-item">$ $80K - $110K</span>
-                            <span class="tag-pill">Remote</span>
-                        </div>
-                    </div>
-                    <div class="job-right">
-                        <div class="timestamp">3 days ago</div>
-                        <button class="btn secondary view-btn">
-                            View Details
-                            <span data-lucide="external-link"></span>
-                        </button>
-                    </div>
+                <section class="tab-panel" data-tab="top-skills">
+                    <h2>Top Skills</h2>
+                    <p>Placeholder content for Top Skills.</p>
                 </section>
             </div>
         </div>
     </section>
 
     <script src="./js/script.js"></script>
+    <script src="./js/tabs.js"></script>
     <script>
         lucide.createIcons();
     </script>

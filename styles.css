@@ -220,17 +220,42 @@ h6 {
 
 .tabs li {
   color: #6b7280;
-  padding-bottom: 12px;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 0;
+  color: #6b7280;
+  font: inherit;
+  padding: 6px 4px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  border-radius: 6px;
 }
 
-.tabs li.active {
+.tab-btn:focus {
+  outline: 2px solid rgba(21, 80, 255, 0.12);
+}
+
+.tab-btn.active {
   color: #111827;
   border-bottom: 3px solid #1550ff;
-  padding-bottom: 9px;
+  padding-bottom: 6px;
+}
+
+/* Tab panels (only active panel shown) */
+.tab-panel {
+  display: none;
+  padding-top: 12px;
+}
+.tab-panel.active {
+  display: block;
 }
 
 .results-controls {

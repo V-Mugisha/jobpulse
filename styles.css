@@ -203,3 +203,159 @@ h6 {
     width: 100%;
   }
 }
+
+/* ===== Results / job list ===== */
+.results {
+  padding: 18px 0 80px;
+}
+
+.tabs ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+  padding: 0 0 14px 0;
+  border-bottom: 1px solid #ececec;
+  align-items: center;
+}
+
+.tabs li {
+  color: #6b7280;
+  padding-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.tabs li.active {
+  color: #111827;
+  border-bottom: 3px solid #1550ff;
+  padding-bottom: 9px;
+}
+
+.results-controls {
+  display: flex;
+  gap: 18px;
+  margin: 18px 0 20px;
+  align-items: center;
+}
+
+.search-in-results {
+  flex: 1 1 auto;
+  height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ececec;
+  background: #fff;
+  color: #111827;
+}
+
+.sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sort-select {
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e8;
+  padding: 6px 10px;
+  background: #fff;
+}
+
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.job-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 3px 10px rgba(16, 24, 40, 0.03);
+}
+
+.job-left {
+  flex: 1 1 auto;
+}
+.job-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.job-title {
+  font-size: 18px;
+  color: #0f1724;
+  margin-bottom: 6px;
+}
+.company {
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.job-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+.job-meta .meta-item {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.job-meta .meta-item svg {
+  width: 16px;
+  height: 16px;
+  stroke: #9ca3af;
+}
+
+.tag-pill {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-size: 13px;
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.view-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 820px) {
+  .results-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sort-wrap {
+    justify-content: space-between;
+  }
+  .job-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .job-right {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

@@ -63,6 +63,104 @@
         </div>
     </main>
 
+    <section class="results">
+        <div class="container">
+            <nav class="tabs" role="navigation" aria-label="results tabs">
+                <ul>
+                    <li class="active">
+                        <span data-lucide="briefcase"></span>
+                        Job Listings
+                    </li>
+                    <li>
+                        <span data-lucide="bar-chart-2"></span>
+                        Salary Analytics
+                    </li>
+                    <li>
+                        <span data-lucide="trending-up"></span>
+                        Top Skills
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="results-controls">
+                <input class="search-in-results" type="search" placeholder="Search in results..." />
+                <div class="sort-wrap">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort" class="sort-select">
+                        <option>Recently Posted</option>
+                        <option>Highest Salary</option>
+                        <option>Most Relevant</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="job-list">
+                <section class="job-card">
+                    <div class="job-left">
+                        <h3 class="job-title">Senior Frontend Engineer</h3>
+                        <div class="company">TechCorp</div>
+                        <div class="job-meta">
+                            <span class="meta-item"><span data-lucide="map-pin"></span> San Francisco, CA</span>
+                            <span class="meta-item">$ $180K - $220K</span>
+                            <span class="tag-pill">Remote</span>
+                        </div>
+                    </div>
+                    <div class="job-right">
+                        <div class="timestamp">2 days ago</div>
+                        <button class="btn secondary view-btn">
+                            View Details
+                            <span data-lucide="external-link"></span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="job-card">
+                    <div class="job-left">
+                        <h3 class="job-title">Product Manager</h3>
+                        <div class="company">StartupXYZ</div>
+                        <div class="job-meta">
+                            <span class="meta-item">
+                                <span data-lucide="map-pin"></span>
+                                New York, NY
+                            </span>
+                            <span class="meta-item">$ $150K - $180K</span>
+                            <span class="tag-pill">Hybrid</span>
+                        </div>
+                    </div>
+                    <div class="job-right">
+                        <div class="timestamp">1 day ago</div>
+                        <button class="btn secondary view-btn">
+                            View Details
+                            <span data-lucide="external-link"></span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="job-card">
+                    <div class="job-left">
+                        <h3 class="job-title">Junior Developer</h3>
+                        <div class="company">WebStudio</div>
+                        <div class="job-meta">
+                            <span class="meta-item">
+                                <span data-lucide="map-pin"></span>
+                                Remote
+                            </span>
+                            <span class="meta-item">$ $80K - $110K</span>
+                            <span class="tag-pill">Remote</span>
+                        </div>
+                    </div>
+                    <div class="job-right">
+                        <div class="timestamp">3 days ago</div>
+                        <button class="btn secondary view-btn">
+                            View Details
+                            <span data-lucide="external-link"></span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
     <script src="./js/script.js"></script>
     <script>
         lucide.createIcons();

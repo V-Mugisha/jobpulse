@@ -25,17 +25,18 @@
 
         <div class="tab-panels">
             <section class="tab-panel active" data-tab="job-listings">
-                <div class="results-controls">
-                    <input class="search-in-results" type="search" placeholder="Search in results..." />
+                <form id="results-controls-form" class="results-controls">
+                    <input id="search-results-input" name="query" class="search-in-results" type="search"
+                        placeholder="Search in results..." />
                     <div class="sort-wrap">
                         <label for="sort">Sort by:</label>
-                        <select id="sort" class="sort-select">
+                        <select id="sort" name="sort" class="sort-select">
                             <option>Recently Posted</option>
                             <option>Highest Salary</option>
                             <option>Most Relevant</option>
                         </select>
                     </div>
-                </div>
+                </form>
 
                 <div class="job-list">
                     <article class="job-card">

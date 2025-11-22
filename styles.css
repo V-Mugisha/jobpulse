@@ -586,7 +586,8 @@ h6 {
 .skills-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  /* match vertical spacing used by .dist-row (14px) */
+  gap: 14px;
 }
 .skill-row {
   display: flex;

@@ -1,20 +1,22 @@
 <main class="hero">
     <div class="container">
         <div class="search-card" aria-label="job search">
-            <form class="search-form" action="#">
+            <form class="search-form">
                 <div class="fields">
                     <div class="field">
                         <label>Job Title</label>
                         <div class="input-with-icon">
                             <span class="input-icon" data-lucide="search"></span>
-                            <input type="text" placeholder="e.g., Software Engineer, Product Manager" />
+                            <input type="text" name="jobTitle" id="jobTitle"
+                                placeholder="e.g., Software Engineer, Product Manager" />
                         </div>
                     </div>
                     <div class="field">
                         <label>Location</label>
                         <div class="input-with-icon">
                             <span class="input-icon" data-lucide="map-pin"></span>
-                            <input type="text" placeholder="e.g., San Francisco, Remote" />
+                            <input type="text" name="location" id="location"
+                                placeholder="e.g., San Francisco, Remote" />
                         </div>
                     </div>
                 </div>

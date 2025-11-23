@@ -1,210 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
     <title>Job Market Analyzer</title>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="./env.js"></script>
-  </head>
+</head>
 
-  <body>
+<body>
     <header class="topbar">
-      <div class="container">
-        <div class="brand">
-          <span class="brand-icon" data-lucide="briefcase"></span>
-          <span class="brand-title">Job Market Analyzer</span>
+        <div class="container">
+            <div class="brand">
+                <span class="brand-icon" data-lucide="briefcase"></span>
+                <span class="brand-title">Job Market Analyzer</span>
+            </div>
+            <div class="tagline">Analyze trends • Find opportunities</div>
         </div>
-        <div class="tagline">Analyze trends • Find opportunities</div>
-      </div>
     </header>
 
     <main class="hero">
-      <div class="container">
-        <div class="search-card" aria-label="job search">
-          <form class="seach-form">
-            <div class="fields">
-              <div class="field">
-                <label>Job Title</label>
-                <div class="input-with-icon">
-                  <span class="input-icon" data-lucide="search"></span>
-                  <input
-                    type="text"
-                    name="jobTitle"
-                    id="jobTitle"
-                    placeholder="e.g., Software Engineer, Product Manager"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" id="search-job-btn" type="submit">
-                <span data-lucide="search"></span>
-                Search Jobs
-              </button>
-              <button class="btn secondary" id="reset-job-btn" type="button">
-                <span data-lucide="refresh-cw"></span>
-                Reset
-              </button>
-              <button class="btn secondary" id="toggle-filters" type="button">
-                <span data-lucide="funnel"></span>
-                <span id="btn-text">Show Filters</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Filters: placed between search form and results -->
-      <div class="filters-panel" id="filters-panel" role="region" aria-hidden="false">
         <div class="container">
-          <div class="filters-card" id="filters-card">
-            <div class="filters-grid">
-              <div class="filter-group">
-                <h4>Employment Type</h4>
-                <label
-                  ><input type="checkbox" id="filter-remote" /> Remote</label
-                ><br />
-                <label
-                  ><input type="checkbox" id="filter-onsite" /> On-site</label
-                ><br />
-                <label
-                  ><input type="checkbox" id="filter-hybrid" /> Hybrid</label
-                >
-              </div>
-              <div class="filter-group">
-                <h4>Experience Level</h4>
-                <label
-                  ><input type="checkbox" id="filter-junior" /> Junior</label
-                ><br />
-                <label
-                  ><input type="checkbox" id="filter-mid" /> Mid-Level</label
-                ><br />
-                <label
-                  ><input type="checkbox" id="filter-senior" /> Senior</label
-                >
-              </div>
-              <div class="filter-group">
-                <h4>Salary Range (K)</h4>
-                <div style="display: flex; gap: 8px; align-items: center">
-                  <input
-                    id="filter-salary-min"
-                    type="number"
-                    placeholder="min (80)"
-                    style="
+            <div class="search-card" aria-label="job search">
+                <form class="seach-form">
+                    <div class="fields">
+                        <div class="field">
+                            <label>Job Title</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon" data-lucide="search"></span>
+                                <input type="text" name="jobTitle" id="jobTitle"
+                                    placeholder="e.g., Software Engineer, Product Manager" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Category</label>
+                            <select id="filter-category"
+                                style="width:100%; height:46px; padding:8px; border-radius:8px; border:1px solid #e6e6e8; background:#fff;">
+                                <option value="">-- Any category --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn primary" id="search-job-btn" type="submit">
+                            <span data-lucide="search"></span>
+                            Search Jobs
+                        </button>
+                        <button class="btn secondary" id="reset-job-btn" type="button">
+                            <span data-lucide="refresh-cw"></span>
+                            Reset
+                        </button>
+                        <button class="btn secondary" id="toggle-filters" type="button">
+                            <span data-lucide="funnel"></span>
+                            <span id="btn-text">Show Filters</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filters: placed between search form and results -->
+        <div class="filters-panel" id="filters-panel" role="region" aria-hidden="false">
+            <div class="container">
+                <div class="filters-card" id="filters-card">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <h4>Employment Type</h4>
+                            <label><input type="checkbox" id="filter-remote" /> Remote</label><br />
+                            <label><input type="checkbox" id="filter-onsite" /> On-site</label><br />
+                            <label><input type="checkbox" id="filter-hybrid" /> Hybrid</label>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Experience Level</h4>
+                            <label><input type="checkbox" id="filter-junior" /> Junior</label><br />
+                            <label><input type="checkbox" id="filter-mid" /> Mid-Level</label><br />
+                            <label><input type="checkbox" id="filter-senior" /> Senior</label>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Salary Range (K)</h4>
+                            <div style="display: flex; gap: 8px; align-items: center">
+                                <input id="filter-salary-min" type="number" placeholder="min (80)" style="
                       width: 100%;
                       height: 42px;
                       padding: 8px;
                       border-radius: 8px;
                       border: 1px solid #e6e6e8;
-                    "
-                  />
-                  <input
-                    id="filter-salary-max"
-                    type="number"
-                    placeholder="max (145)"
-                    style="
+                    " />
+                                <input id="filter-salary-max" type="number" placeholder="max (145)" style="
                       width: 100%;
                       height: 42px;
                       padding: 8px;
                       border-radius: 8px;
                       border: 1px solid #e6e6e8;
-                    "
-                  />
+                    " />
+                            </div>
+                        </div>
+                        <!-- category moved to the hero search form for server-side fetching -->
+                    </div>
+                    <div class="filters-actions" style="margin-top: 12px">
+                        <button class="btn primary" id="apply-filters-btn">Apply</button>
+                        <button class="btn secondary" id="reset-filters-btn">
+                            Reset Filters
+                        </button>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="filters-actions" style="margin-top: 12px">
-              <button class="btn primary" id="apply-filters-btn">Apply</button>
-              <button class="btn secondary" id="reset-filters-btn">
-                Reset Filters
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <section class="results">
-        <div class="container">
-          <nav class="tabs" role="tablist" aria-label="results tabs">
-            <div
-              class="tab-btn active"
-              data-tab="job-listings"
-              role="tab"
-              aria-selected="true"
-            >
-              <span data-lucide="briefcase"></span>
-              Job Listings
+        <section class="results">
+            <div class="container">
+                <nav class="tabs" role="tablist" aria-label="results tabs">
+                    <div class="tab-btn active" data-tab="job-listings" role="tab" aria-selected="true">
+                        <span data-lucide="briefcase"></span>
+                        Job Listings
+                    </div>
+                </nav>
+
+                <div class="tab-panels">
+                    <section class="tab-panel active" data-tab="job-listings">
+                        <form id="results-controls-form" class="results-controls">
+                            <input id="search-results-input" name="query" class="search-in-results" type="search"
+                                placeholder="Search in results..." />
+                            <div class="per-page-wrap">
+                                <label for="per-page-select">Items per page:</label>
+                                <select id="per-page-select" name="perPage" class="per-page-select">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                            <div class="sort-wrap">
+                                <label for="sort">Sort by:</label>
+                                <select id="sort" name="sort" class="sort-select">
+                                    <option value="recent">Recently Posted</option>
+                                    <option value="salary_desc">Highest Salary</option>
+                                    <option value="salary_asc">Lowest Salary</option>
+                                    <option value="company_az">Company (A–Z)</option>
+                                    <option value="contract_type">Contract Type</option>
+                                </select>
+                            </div>
+                        </form>
+
+                        <!-- Job listings are rendered dynamically by js/results.js -->
+                        <div class="results-container" id="job-results" aria-live="polite">
+                            Loading job listings…
+                        </div>
+                        <div id="pagination-controls" class="pagination-controls" aria-live="polite"></div>
+                    </section>
+                </div>
             </div>
-          </nav>
-
-          <div class="tab-panels">
-            <section class="tab-panel active" data-tab="job-listings">
-              <form id="results-controls-form" class="results-controls">
-                <input
-                  id="search-results-input"
-                  name="query"
-                  class="search-in-results"
-                  type="search"
-                  placeholder="Search in results..."
-                />
-                <div class="per-page-wrap">
-                  <label for="per-page-select">Items per page:</label>
-                  <select
-                    id="per-page-select"
-                    name="perPage"
-                    class="per-page-select"
-                  >
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="50">50</option>
-                  </select>
-                </div>
-                <div class="sort-wrap">
-                  <label for="sort">Sort by:</label>
-                  <select id="sort" name="sort" class="sort-select">
-                    <option value="recent">Recently Posted</option>
-                    <option value="salary_desc">Highest Salary</option>
-                    <option value="salary_asc">Lowest Salary</option>
-                    <option value="company_az">Company (A–Z)</option>
-                    <option value="contract_type">Contract Type</option>
-                  </select>
-                </div>
-              </form>
-
-              <!-- Job listings are rendered dynamically by js/results.js -->
-              <div
-                class="results-container"
-                id="job-results"
-                aria-live="polite"
-              >
-                Loading job listings…
-              </div>
-              <div
-                id="pagination-controls"
-                class="pagination-controls"
-                aria-live="polite"
-              ></div>
-            </section>
-          </div>
-        </div>
-      </section>
+        </section>
     </main>
     <script src="./js/script.js"></script>
     <script>
-      lucide.createIcons();
+        lucide.createIcons();
     </script>
-  </body>
+</body>
+
 </html>

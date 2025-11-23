@@ -25,6 +25,8 @@ if (resetJobsBtn) {
     if (titleInput) titleInput.value = "";
     const resultsSearch = document.getElementById("search-results-input");
     if (resultsSearch) resultsSearch.value = "";
+    const cat = document.getElementById("filter-category");
+    if (cat) cat.value = "";
     // Re-fetch the default API results and render
     getJobs(DEFAULTS);
   });
@@ -155,6 +157,92 @@ function applyFiltersAndRender() {
   renderJobListings();
 }
 
+// ----- Categories: fetch, cache in localStorage, populate dropdown -----
+const CATEGORIES_STORAGE_KEY = "jobpulse.categories";
+
+function populateCategorySelect() {
+  const sel = document.getElementById("filter-category");
+  if (!sel) return;
+  sel.innerHTML = "<option value=''>-- Any category --</option>";
+  try {
+    const raw = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+    if (!raw) return;
+    const items = JSON.parse(raw);
+    if (!Array.isArray(items)) return;
+    items.forEach((c) => {
+      const o = document.createElement("option");
+      o.value = c.tag || c.label || "";
+      o.textContent = c.label || c.tag || o.value;
+      sel.appendChild(o);
+    });
+  } catch (err) {
+    console.warn("Failed to populate categories:", err);
+  }
+}
+
+async function fetchAndCacheCategories() {
+  const appId = window.ENV && window.ENV.ADZUNA_APP_ID;
+  const appKey = window.ENV && window.ENV.ADZUNA_APP_KEY;
+  if (!appId || !appKey) {
+    console.warn("Skipping categories fetch: missing ADZUNA keys in env.js");
+    return;
+  }
+  // if we already have cached categories, populate immediately
+  try {
+    const cached = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+    if (cached) populateCategorySelect();
+  } catch (e) {}
+
+  const url = `https://api.adzuna.com/v1/api/jobs/gb/categories?app_id=${encodeURIComponent(
+    appId
+  )}&app_key=${encodeURIComponent(appKey)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const results = data && data.results ? data.results : [];
+    localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(results));
+    populateCategorySelect();
+  } catch (err) {
+    console.warn("Failed to fetch categories:", err);
+  }
+}
+
+// fetch categories on load (non-blocking)
+try {
+  // delay slightly so DOM is ready (script is at bottom but safe)
+  setTimeout(fetchAndCacheCategories, 50);
+} catch (e) {}
+
+// when the user picks a category in the hero form, run a server search immediately
+try {
+  const catEl = document.getElementById("filter-category");
+  if (catEl) {
+    catEl.addEventListener("change", () => {
+      // fetch page 1 of results for the selected category + current title/filters
+      getJobs(buildSearchParams({ page: 1 }));
+    });
+  }
+} catch (e) {}
+
+// ----- Helper to build unified search params from UI + overrides -----
+function buildSearchParams(overrides = {}) {
+  const title = overrides.jobTitle ?? ((document.getElementById("jobTitle") || {}).value || "");
+  const perPage = overrides.resultsPerPage ?? (parseInt((document.getElementById("per-page-select") || {}).value, 10) || DEFAULTS.resultsPerPage);
+  const page = overrides.page ?? 1;
+  const salaryMin = (document.getElementById("filter-salary-min") || {}).value || null;
+  const salaryMax = (document.getElementById("filter-salary-max") || {}).value || null;
+  const category = (document.getElementById("filter-category") || {}).value || null;
+  return {
+    jobTitle: title,
+    resultsPerPage: perPage,
+    page: page,
+    salary_min: salaryMin ? Number(salaryMin) : null,
+    salary_max: salaryMax ? Number(salaryMax) : null,
+    category: category || null,
+  };
+}
+
 if (searchResultsInput) {
   searchResultsInput.addEventListener("input", (e) => {
     // typing in search field should combine with filters
@@ -256,11 +344,16 @@ async function getJobs(params) {
   const url = `https://api.adzuna.com/v1/api/jobs/gb/search/${page}?app_id=${encodeURIComponent(
     appId
   )}&app_key=${encodeURIComponent(appKey)}&results_per_page=${perPage}&title_only=${title}`;
+  // append optional server-side filters
+  const salaryMinParam = params.salary_min != null ? `&salary_min=${encodeURIComponent(params.salary_min)}` : "";
+  const salaryMaxParam = params.salary_max != null ? `&salary_max=${encodeURIComponent(params.salary_max)}` : "";
+  const categoryParam = params.category ? `&category=${encodeURIComponent(params.category)}` : "";
+  const finalUrl = url + salaryMinParam + salaryMaxParam + categoryParam;
   try {
     setError(null);
     setLoading(true);
-    console.log(url);
-    const response = await fetch(url);
+    console.log(finalUrl);
+    const response = await fetch(finalUrl);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -637,22 +730,14 @@ function renderPagination() {
     prev.addEventListener("click", (e) => {
       e.preventDefault();
       if (page <= 1) return;
-      getJobs({
-        jobTitle: params.jobTitle || "",
-        resultsPerPage: perPage,
-        page: page - 1,
-      });
+      getJobs(buildSearchParams({ page: page - 1 }));
     });
   }
   if (next) {
     next.addEventListener("click", (e) => {
       e.preventDefault();
       if (page >= totalPages) return;
-      getJobs({
-        jobTitle: params.jobTitle || "",
-        resultsPerPage: perPage,
-        page: page + 1,
-      });
+      getJobs(buildSearchParams({ page: page + 1 }));
     });
   }
 }
@@ -662,9 +747,8 @@ const perPageSelectEl = document.getElementById("per-page-select");
 if (perPageSelectEl) {
   perPageSelectEl.addEventListener("change", (e) => {
     const perPage = parseInt(e.target.value, 10) || DEFAULTS.resultsPerPage;
-    const lastTitle = (document.getElementById("jobTitle") || {}).value || "";
-    // when per-page changes, go back to page 1 and refetch
-    getJobs({ jobTitle: lastTitle, resultsPerPage: perPage, page: 1 });
+    // when per-page changes, go back to page 1 and refetch using current filters
+    getJobs(buildSearchParams({ resultsPerPage: perPage, page: 1 }));
   });
 }
 
@@ -676,7 +760,7 @@ if (searchJobsBtn) {
     const perPage =
       parseInt((document.getElementById("per-page-select") || {}).value, 10) ||
       DEFAULTS.resultsPerPage;
-    getJobs({ jobTitle: inputValue, resultsPerPage: perPage, page: 1 });
+    getJobs(buildSearchParams({ jobTitle: inputValue, resultsPerPage: perPage, page: 1 }));
   });
 }
 
@@ -720,6 +804,8 @@ if (resetFiltersBtn) {
     if (min) min.value = "";
     const max = document.getElementById("filter-salary-max");
     if (max) max.value = "";
+    const cat = document.getElementById("filter-category");
+    if (cat) cat.value = "";
     // Re-apply filters (which will restore full page if none selected)
     applyFiltersAndRender();
   });

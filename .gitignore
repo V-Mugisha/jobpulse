@@ -1,0 +1,2 @@
+# Ignore local env overrides containing secrets
+env.js

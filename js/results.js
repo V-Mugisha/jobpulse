@@ -1,11 +1,25 @@
 // Renderer for results panels (job listings, analytics, top skills)
 // Uses window.SAMPLE_DATA as the source of truth (replace with API later)
 
+// Helper: format posted date using `created` ISO string when available.
+function formatPostedDate(createdIso, postedDaysAgo) {
+  if (createdIso) {
+    const d = new Date(createdIso);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+  }
+  if (postedDaysAgo != null) return postedDaysAgo + ' days ago';
+  return 'Unknown';
+}
+
 function renderJobListings(container, jobs) {
   if (!container) return;
   container.innerHTML = '';
   const list = document.createElement('div');
   list.className = 'job-list';
+
+  console.log("Jobs", jobs)
 
   jobs.forEach(job => {
     const art = document.createElement('article');
@@ -48,7 +62,8 @@ function renderJobListings(container, jobs) {
     right.className = 'job-right';
     const time = document.createElement('div');
     time.className = 'timestamp';
-    time.textContent = (job.postedDaysAgo != null) ? (job.postedDaysAgo + ' days ago') : 'Posted date unknown';
+    // Prefer `created` ISO timestamp from API; fall back to `postedDaysAgo` if present
+    time.textContent = formatPostedDate(job.created, job.postedDaysAgo);
     right.appendChild(time);
     const btn = document.createElement('button');
     btn.className = 'btn secondary view-btn';
@@ -154,7 +169,7 @@ function buildJobDetailsElement(job) {
   metaList.appendChild(liContract);
 
   const liPosted = document.createElement('li');
-  liPosted.innerHTML = '<strong>Posted:</strong> ' + (job.postedDaysAgo != null ? (job.postedDaysAgo + ' days ago') : (job.created ? new Date(job.created).toString() : 'Unknown'));
+  liPosted.innerHTML = '<strong>Posted:</strong> ' + formatPostedDate(job.created, job.postedDaysAgo);
   metaList.appendChild(liPosted);
 
   wrapper.appendChild(metaList);

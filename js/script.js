@@ -166,8 +166,6 @@ const DEFAULTS = {
   jobTitle: "",
   resultsPerPage: 10,
   page: 1,
-  app_id: "ec632ca9",
-  app_key: "06906d5127fe7f4f7431a4b2c43b53cc",
 };
 
 // Track last used params so retry can re-run the same request
@@ -240,10 +238,24 @@ async function getJobs(params) {
   // store last params for retry
   window.LAST_JOB_PARAMS = params;
   const title = encodeURIComponent(params.jobTitle || "");
-  const perPage = params.resultsPerPage || 10;
+  const perPage = params.resultsPerPage || DEFAULTS.resultsPerPage;
   const page = params.page || 1;
+
+  // Read Adzuna credentials from the local `env.js` (window.ENV).
+  // This keeps keys out of the main script and allows local overrides.
+  const appId = window.ENV && window.ENV.ADZUNA_APP_ID;
+  const appKey = window.ENV && window.ENV.ADZUNA_APP_KEY;
+  if (!appId || !appKey) {
+    setError(
+      "Missing Adzuna API keys. Add `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` to `env.js`."
+    );
+    return;
+  }
+
   // Adzuna expects the page number in the path; include results_per_page as query
-  const url = `https://api.adzuna.com/v1/api/jobs/gb/search/${page}?app_id=${DEFAULTS.app_id}&app_key=${DEFAULTS.app_key}&results_per_page=${perPage}&title_only=${title}`;
+  const url = `https://api.adzuna.com/v1/api/jobs/gb/search/${page}?app_id=${encodeURIComponent(
+    appId
+  )}&app_key=${encodeURIComponent(appKey)}&results_per_page=${perPage}&title_only=${title}`;
   try {
     setError(null);
     setLoading(true);

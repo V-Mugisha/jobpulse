@@ -11,196 +11,215 @@ function renderJobListings(container, jobs) {
     const art = document.createElement('article');
     art.className = 'job-card';
 
-    art.innerHTML = `
-      <div class="job-left">
-        <h3 class="job-title">${escapeHtml(job.title)}</h3>
-        <div class="company">${escapeHtml(job.company)}</div>
-        <div class="job-meta">
-          <span class="meta-item"><span data-lucide="map-pin"></span> ${escapeHtml(job.location)}</span>
-          <span class="meta-item">$ ${job.salaryMinK}K - $${job.salaryMaxK}K</span>
-          <span class="tag-pill">${escapeHtml(capitalize(job.employment))}</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div class="timestamp">${job.postedDaysAgo} days ago</div>
-        <button class="btn secondary view-btn">View Details <span data-lucide="external-link"></span></button>
-      </div>
-    `;
+    const left = document.createElement('div');
+    left.className = 'job-left';
 
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'job-title';
+    titleEl.textContent = job.title || job.name || 'Untitled';
+    left.appendChild(titleEl);
+
+    const companyEl = document.createElement('div');
+    companyEl.className = 'company';
+    companyEl.textContent = (job.company && (job.company.display_name || job.company.name)) || job.company || '';
+    left.appendChild(companyEl);
+
+    const meta = document.createElement('div');
+    meta.className = 'job-meta';
+
+    const locSpan = document.createElement('span');
+    locSpan.className = 'meta-item';
+    locSpan.innerHTML = '<span data-lucide="map-pin"></span> ' + (typeof job.location === 'string' ? job.location : (job.location && job.location.display_name) || '');
+    meta.appendChild(locSpan);
+
+    const salarySpan = document.createElement('span');
+    salarySpan.className = 'meta-item';
+    salarySpan.textContent = (job.salaryMinK != null || job.salaryMaxK != null) ? ('$ ' + (job.salaryMinK || '?') + 'K - $' + (job.salaryMaxK || '?') + 'K') : 'Salary not listed';
+    meta.appendChild(salarySpan);
+
+    const tag = document.createElement('span');
+    tag.className = 'tag-pill';
+    tag.textContent = job.employment || '';
+    meta.appendChild(tag);
+
+    left.appendChild(meta);
+
+    const right = document.createElement('div');
+    right.className = 'job-right';
+    const time = document.createElement('div');
+    time.className = 'timestamp';
+    time.textContent = (job.postedDaysAgo != null) ? (job.postedDaysAgo + ' days ago') : 'Posted date unknown';
+    right.appendChild(time);
+    const btn = document.createElement('button');
+    btn.className = 'btn secondary view-btn';
+    btn.innerHTML = 'View Details <span data-lucide="external-link"></span>';
+    // Open job details modal when clicked
+    btn.addEventListener('click', function () {
+      showJobDetails(job);
+    });
+    right.appendChild(btn);
+
+    art.appendChild(left);
+    art.appendChild(right);
     list.appendChild(art);
   });
 
   container.appendChild(list);
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
-function computeSalaryStats(jobs) {
-  if (!jobs || !jobs.length) return null;
-  const all = jobs.map(job => (job.salaryMinK + job.salaryMaxK) / 2);
-  const avg = Math.round(all.reduce((acc, val) => acc + val, 0) / all.length);
-  const sorted = all.slice().sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length/2);
-  const median = sorted.length % 2 === 1 ? sorted[mid] : Math.round((sorted[mid-1]+sorted[mid])/2);
-  const highest = Math.max(...all);
-  const lowest = Math.min(...all);
-  return { average: avg, median, highest, lowest };
-}
+// Simplified renderer: only job listings remain.
 
-function computeDistribution(jobs) {
-  const buckets = [ [60,100], [100,140], [140,180], [180,1000] ];
-  const counts = buckets.map(([min, max]) => jobs.filter(job => job.salaryMinK >= min && job.salaryMinK < max).length);
-  return counts;
-}
-
-function renderAnalytics(container, jobs) {
-  if (!container) return;
-  container.innerHTML = '';
-  const stats = computeSalaryStats(jobs) || { average: 0, median: 0, highest:0, lowest:0 };
-
-  const cards = document.createElement('div');
-  cards.className = 'analytics-cards';
-  cards.innerHTML = `
-    <div class="stat-card"><div class="stat-label">Average Salary</div><div class="stat-value">$${stats.average}K</div></div>
-    <div class="stat-card"><div class="stat-label">Median Salary</div><div class="stat-value">$${stats.median}K</div></div>
-    <div class="stat-card"><div class="stat-label">Highest Salary</div><div class="stat-value">$${stats.highest}K</div></div>
-    <div class="stat-card"><div class="stat-label">Lowest Salary</div><div class="stat-value">$${stats.lowest}K</div></div>
-  `;
-
-  container.appendChild(cards);
-
-  // distribution
-  const distCard = document.createElement('div');
-  distCard.className = 'distribution-card';
-  distCard.innerHTML = '<h3 class="distribution-title">Salary Distribution</h3>';
-  const counts = computeDistribution(jobs);
-  const labels = ["$60K - $100K", "$100K - $140K", "$140K - $180K", "$180K+"];
-  counts.forEach((count, index) => {
-    const row = document.createElement('div');
-    row.className = 'dist-row';
-    const pct = jobs.length ? Math.round((count / jobs.length) * 100) : 0;
-    row.innerHTML = `
-      <div class="dist-label">${labels[index]}</div>
-      <div class="dist-bar"><div class="dist-bar-fill" style="width:${pct}%"></div></div>
-      <div class="dist-count">${count} jobs</div>
-    `;
-    distCard.appendChild(row);
-  });
-  container.appendChild(distCard);
-}
-
-function renderTopSkills(container, jobs) {
-  if (!container) return;
-  container.innerHTML = '';
-  const counts = {};
-  jobs.forEach(job => (job.skills || []).forEach(skill => { counts[skill] = (counts[skill] || 0) + 1; }));
-  const skillArray = Object.keys(counts).map(skillName => ({ skill: skillName, count: counts[skillName] }));
-  skillArray.sort((a, b) => b.count - a.count);
-  const totalJobs = jobs.length || 1;
-
-  const card = document.createElement('div');
-  card.className = 'skills-card';
-  card.innerHTML = '<h3 class="skills-title">Top Skills</h3>';
-  const list = document.createElement('div');
-  list.className = 'skills-list';
-
-  skillArray.forEach((skillObj, index) => {
-    const row = document.createElement('div');
-    row.className = 'skill-row';
-    const pct = Math.round((skillObj.count / totalJobs) * 100);
-    row.innerHTML = `
-      <div class="skill-rank">${index + 1}.</div>
-      <div class="skill-name">${escapeHtml(skillObj.skill)}</div>
-      <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>
-      <div class="skill-meta"><span class="skill-count">${skillObj.count} jobs</span><span class="skill-pct">${pct}%</span></div>
-    `;
-    list.appendChild(row);
-  });
-
-  card.appendChild(list);
-  container.appendChild(card);
-}
-
-// small helpers
-function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function capitalize(s){ return String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1); }
-
-function initResultsRenderer() {
-  // Try to find explicit data-component containers (if present).
-  // Fall back to the lightweight placeholders that live inside the tab panels.
+function getJobContainer() {
   let jobContainer = document.querySelector('[data-component="job-listings"]');
-  let analyticsContainer = document.querySelector('[data-component="salary-analytics"]');
-  let skillsContainer = document.querySelector('[data-component="top-skills"]');
-
-  // fallback: find the placeholder inside each tab panel
   if (!jobContainer) {
-    const jobPlaceholder = document.querySelector('.tab-panel[data-tab="job-listings"] .component-placeholder');
-    if (jobPlaceholder) {
+    const placeholder = document.querySelector('.tab-panel[data-tab="job-listings"] .component-placeholder');
+    if (placeholder) {
       const container = document.createElement('div');
-      // preserve a marker class
       container.className = 'job-listings-container';
-      jobPlaceholder.replaceWith(container);
+      placeholder.replaceWith(container);
       jobContainer = container;
     }
   }
-  if (!analyticsContainer) {
-    const analyticsPlaceholder = document.querySelector('.tab-panel[data-tab="salary-analytics"] .component-placeholder');
-    if (analyticsPlaceholder) {
-      const container = document.createElement('div');
-      container.className = 'salary-analytics-container';
-      analyticsPlaceholder.replaceWith(container);
-      analyticsContainer = container;
-    }
-  }
-  if (!skillsContainer) {
-    const skillsPlaceholder = document.querySelector('.tab-panel[data-tab="top-skills"] .component-placeholder');
-    if (skillsPlaceholder) {
-      const container = document.createElement('div');
-      container.className = 'top-skills-container';
-      skillsPlaceholder.replaceWith(container);
-      skillsContainer = container;
-    }
-  }
+  return jobContainer;
+}
 
-  // Show loading states first
+function initResultsRenderer() {
+  const jobContainer = getJobContainer();
   if (jobContainer) jobContainer.innerHTML = '<div class="component-placeholder" aria-live="polite">Loading job listings…</div>';
-  if (analyticsContainer) analyticsContainer.innerHTML = '<div class="component-placeholder" aria-live="polite">Loading analytics…</div>';
-  if (skillsContainer) skillsContainer.innerHTML = '<div class="component-placeholder" aria-live="polite">Loading top skills…</div>';
 
   const data = window.SAMPLE_DATA;
-  console.log("Rendering results with data:", data);
   if (!data) {
-    // If no data is present yet, wait for a 'data:loaded' event (useful when hooking up API)
-    const onDataLoaded = () => {
-      document.removeEventListener('data:loaded', onDataLoaded);
-      initResultsRenderer();
-    };
+    const onDataLoaded = () => { document.removeEventListener('data:loaded', onDataLoaded); initResultsRenderer(); };
     document.addEventListener('data:loaded', onDataLoaded);
     return;
   }
 
-  const jobs = data.jobs || [];
-
+  const jobs = Array.isArray(data.jobs) ? data.jobs : [];
   if (!jobs.length) {
-    // no results
     if (jobContainer) jobContainer.innerHTML = '<div class="no-results">No job listings found.</div>';
-    if (analyticsContainer) analyticsContainer.innerHTML = '<div class="no-results">No analytics available.</div>';
-    if (skillsContainer) skillsContainer.innerHTML = '<div class="no-results">No skills data available.</div>';
     return;
   }
 
-  // render each section with actual data
   if (jobContainer) renderJobListings(jobContainer, jobs);
-  if (analyticsContainer) renderAnalytics(analyticsContainer, jobs);
-  if (skillsContainer) renderTopSkills(skillsContainer, jobs);
-
-  // Render icons for dynamically inserted icon placeholders
-  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
 document.addEventListener('components:loaded', initResultsRenderer);
 if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(initResultsRenderer, 50);
 
-// Helper for external code (or API adapter) to update data and notify renderer
-window.setSampleData = function(newData) {
-  window.SAMPLE_DATA = newData;
-  document.dispatchEvent(new Event('data:loaded'));
-};
+// Hook for external code to update the data and notify renderer
+window.setSampleData = function(newData) { window.SAMPLE_DATA = newData; document.dispatchEvent(new Event('data:loaded')); };
+
+// Render a provided jobs array into the listings container
+window.renderJobsView = function(jobsArray) { const container = getJobContainer(); const jobs = Array.isArray(jobsArray) ? jobsArray : []; if (!jobs.length) { if (container) container.innerHTML = '<div class="no-results">No job listings found.</div>'; return; } renderJobListings(container, jobs); };
+
+// ----- Job Details modal UI -----
+let _currentJobDetailsModal = null;
+
+function buildJobDetailsElement(job) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'job-details-content';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'job-details-close';
+  closeBtn.type = 'button';
+  closeBtn.textContent = 'Close';
+  closeBtn.addEventListener('click', closeJobDetails);
+  wrapper.appendChild(closeBtn);
+
+  const title = document.createElement('h2');
+  title.textContent = job.title || job.name || 'Untitled';
+  wrapper.appendChild(title);
+
+  const company = document.createElement('div');
+  company.className = 'job-details-company';
+  company.textContent = (job.company && (job.company.display_name || job.company.name)) || job.company || '';
+  wrapper.appendChild(company);
+
+  const metaList = document.createElement('ul');
+  metaList.className = 'job-details-meta';
+
+  const liLocation = document.createElement('li');
+  liLocation.innerHTML = '<strong>Location:</strong> ' + (typeof job.location === 'string' ? job.location : (job.location && job.location.display_name) || '');
+  metaList.appendChild(liLocation);
+
+  const liSalary = document.createElement('li');
+  const minRaw = job.salary_min != null ? Number(job.salary_min) : (job.salaryMinK != null ? Number(job.salaryMinK) * 1000 : null);
+  const maxRaw = job.salary_max != null ? Number(job.salary_max) : (job.salaryMaxK != null ? Number(job.salaryMaxK) * 1000 : null);
+  liSalary.innerHTML = '<strong>Salary:</strong> ' + (minRaw == null && maxRaw == null ? 'Not listed' : (('$' + (minRaw != null ? Math.round(minRaw/1000) : '?') + 'K - $' + (maxRaw != null ? Math.round(maxRaw/1000) : '?') + 'K')));
+  metaList.appendChild(liSalary);
+
+  const liContract = document.createElement('li');
+  liContract.innerHTML = '<strong>Contract:</strong> ' + (job.contract_type || job.contract_time || job.employment || '');
+  metaList.appendChild(liContract);
+
+  const liPosted = document.createElement('li');
+  liPosted.innerHTML = '<strong>Posted:</strong> ' + (job.postedDaysAgo != null ? (job.postedDaysAgo + ' days ago') : (job.created ? new Date(job.created).toString() : 'Unknown'));
+  metaList.appendChild(liPosted);
+
+  wrapper.appendChild(metaList);
+
+  if (job.description) {
+    const descHeading = document.createElement('h3');
+    descHeading.textContent = 'Description';
+    wrapper.appendChild(descHeading);
+
+    const desc = document.createElement('div');
+    desc.className = 'job-details-description';
+    // Job descriptions from Adzuna may contain HTML — render as plain text to avoid injecting markup
+    desc.textContent = job.description;
+    wrapper.appendChild(desc);
+  }
+
+  if (job.category) {
+    const cat = document.createElement('div');
+    cat.className = 'job-details-category';
+    cat.innerHTML = '<strong>Category:</strong> ' + (job.category.label || job.category);
+    wrapper.appendChild(cat);
+  }
+
+  // Links / apply action
+  // Prefer `redirect_url`, fall back to `refs.adzuna_url`, then construct a basic Adzuna job URL using id+adref when available.
+  const applyHref = job.redirect_url || (job.refs && job.refs.adzuna_url) || (job.id ? ('https://www.adzuna.co.uk/jobs/details/' + encodeURIComponent(job.id) + (job.adref ? ('?adref=' + encodeURIComponent(job.adref)) : '')) : null);
+  if (applyHref) {
+    const applyLink = document.createElement('a');
+    // style as a primary button so it's prominent; CSS may override
+    applyLink.className = 'btn primary job-details-apply';
+    applyLink.href = applyHref;
+    applyLink.target = '_blank';
+    applyLink.rel = 'noopener noreferrer';
+    applyLink.textContent = 'Apply for this job';
+    // Provide a small hint for users about opening in a new tab
+    const hint = document.createElement('div');
+    hint.className = 'job-details-apply-hint';
+    hint.textContent = 'Opens the original listing in a new tab.';
+    wrapper.appendChild(applyLink);
+    wrapper.appendChild(hint);
+  }
+
+  return wrapper;
+}
+
+function showJobDetails(job) {
+  closeJobDetails();
+  const overlay = document.createElement('div');
+  overlay.className = 'job-details-modal';
+  overlay.tabIndex = -1;
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeJobDetails();
+  });
+
+  const content = buildJobDetailsElement(job);
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+  _currentJobDetailsModal = overlay;
+  // focus for accessibility
+  overlay.focus();
+}
+
+function closeJobDetails() {
+  if (_currentJobDetailsModal) {
+    try { _currentJobDetailsModal.remove(); } catch (e) { }
+    _currentJobDetailsModal = null;
+  }
+}

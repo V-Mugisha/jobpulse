@@ -1,26 +1,10 @@
 <section class="results">
     <div class="container">
         <nav class="tabs" role="tablist" aria-label="results tabs">
-            <ul>
-                <li>
-                    <button class="tab-btn active" data-tab="job-listings" role="tab" aria-selected="true">
-                        <span data-lucide="briefcase"></span>
-                        Job Listings
-                    </button>
-                </li>
-                <li>
-                    <button class="tab-btn" data-tab="salary-analytics" role="tab" aria-selected="false">
-                        <span data-lucide="bar-chart-2"></span>
-                        Salary Analytics
-                    </button>
-                </li>
-                <li>
-                    <button class="tab-btn" data-tab="top-skills" role="tab" aria-selected="false">
-                        <span data-lucide="trending-up"></span>
-                        Top Skills
-                    </button>
-                </li>
-            </ul>
+            <div class="tab-btn active" data-tab="job-listings" role="tab" aria-selected="true">
+                <span data-lucide="briefcase"></span>
+                Job Listings
+            </div>
         </nav>
 
         <div class="tab-panels">
@@ -40,16 +24,6 @@
 
                 <!-- Job listings are rendered dynamically by js/results.js -->
                 <div class="component-placeholder" aria-live="polite">Loading job listings…</div>
-            </section>
-
-            <section class="tab-panel" data-tab="salary-analytics">
-                <!-- Analytics are rendered dynamically by js/results.js -->
-                <div class="component-placeholder" aria-live="polite">Loading analytics…</div>
-            </section>
-
-            <section class="tab-panel" data-tab="top-skills">
-                <!-- Top skills are rendered dynamically by js/results.js -->
-                <div class="component-placeholder" aria-live="polite">Loading top skills…</div>
             </section>
         </div>
     </div>

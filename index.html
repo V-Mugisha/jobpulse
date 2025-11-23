@@ -55,13 +55,17 @@
                 <span data-lucide="refresh-cw"></span>
                 Reset
               </button>
+              <button class="btn secondary" id="toggle-filters" type="button">
+                <span data-lucide="funnel"></span>
+                <span id="btn-text">Show Filters</span>
+              </button>
             </div>
           </form>
         </div>
       </div>
 
       <!-- Filters: placed between search form and results -->
-      <div class="filters-panel open" role="region" aria-hidden="false">
+      <div class="filters-panel" id="filters-panel" role="region" aria-hidden="false">
         <div class="container">
           <div class="filters-card" id="filters-card">
             <div class="filters-grid">

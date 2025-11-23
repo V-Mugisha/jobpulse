@@ -1,6 +1,20 @@
 console.log("Hello");
 
 const searchJobsBtn = document.getElementById("search-job-btn");
+const toggleFiltersBtn = document.getElementById("toggle-filters");
+const filtersSection = document.getElementById("filters-panel");
+
+toggleFiltersBtn.addEventListener("click", () => {
+  const btnTextEl = document.getElementById("btn-text");
+  const isOpen = filtersSection.classList.contains("open");
+  if (isOpen) {
+    filtersSection.classList.remove("open");
+    if (btnTextEl) btnTextEl.textContent = "Show Filters";
+  } else {
+    filtersSection.classList.add("open");
+    if (btnTextEl) btnTextEl.textContent = "Hide Filters";
+  }
+});
 
 // Reset button: clear inputs/filters and reload default API results
 const resetJobsBtn = document.getElementById("reset-job-btn");

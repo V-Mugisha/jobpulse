@@ -53,3 +53,39 @@ document.addEventListener("components:loaded", () => {
   initHeroForm();
   initResultsControls();
 });
+
+// Fetch initial jobs from Adzuna and feed the renderer.
+async function fetchAndDisplayInitialJobs() {
+  const adzunaAppId = 'xxx'; // Still finding a way to hide these
+  const adzunaAppKey = 'xxxx';
+
+  try {
+    if (typeof fetchAdzunaNormalized !== 'function') {
+      console.warn('API adapter not available: fetchAdzunaNormalized()');
+      return;
+    }
+
+    const adapterResult = await fetchAdzunaNormalized({
+      appId: adzunaAppId,
+      appKey: adzunaAppKey,
+      page: 1,
+      resultsPerPage: 10
+    });
+
+    const normalizedJobs = adapterResult.jobs || [];
+
+    if (typeof window.setSampleData === 'function') {
+      window.setSampleData({ jobs: normalizedJobs });
+    } else {
+      window.SAMPLE_DATA = { jobs: normalizedJobs };
+      document.dispatchEvent(new Event('data:loaded'));
+    }
+  } catch (err) {
+    console.error('Failed to fetch initial jobs from Adzuna:', err);
+  }
+}
+
+// Kick off initial fetch after components are loaded and UI is wired
+document.addEventListener('components:loaded', () => {
+  fetchAndDisplayInitialJobs();
+});

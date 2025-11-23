@@ -166,6 +166,7 @@ function initResultsRenderer() {
   if (skillsContainer) skillsContainer.innerHTML = '<div class="component-placeholder" aria-live="polite">Loading top skills…</div>';
 
   const data = window.SAMPLE_DATA;
+  console.log("Rendering results with data:", data);
   if (!data) {
     // If no data is present yet, wait for a 'data:loaded' event (useful when hooking up API)
     const onDataLoaded = () => {

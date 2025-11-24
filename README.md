@@ -2,6 +2,15 @@
 
 A lightweight job-market frontend built with vanilla HTML, CSS, and JavaScript. Search and filter job listings in real-time using the Adzuna API—no frameworks or build tools required.
 
+## Features & Functionality
+
+- Search job listings by title or category
+- Filter by employment type and salary range
+- Sort results by relevance, salary, or date
+- Customizable pagination with adjustable results per page
+- Detailed job view modal with complete description and company information
+- Direct "Apply" links to employer application pages
+
 ## Quick Start
 
 ### Local Setup
@@ -154,14 +163,15 @@ backend lb-backend
 
 This distributes traffic evenly between both web servers.
 
+## Development Challenges & Solutions
 
-## Development Challenges
+**State Management:** Without a framework, accessing shared data across the app was difficult. Solved by storing global state on the `window` object and using custom `data:loaded` events to trigger reactive updates.
 
-**State Management:** Implemented custom event-driven state using `window.SAMPLE_DATA` and `data:loaded` events instead of relying on frameworks.
+**Component Architecture:** Maintaining a single HTML file with thousands of lines became unmaintainable. Instead of injecting HTML from separate files, dynamically generated all UI components using JavaScript's `document.createElement()` method.
 
-**Single-Page App:** Built dynamic UI with `document.createElement()` to generate DOM elements from JavaScript, avoiding HTML file injection.
+**Loading States:** Manually implemented loading indicators and error handling by dispatching custom events (`data:loaded`, `error:loading`) and having UI elements listen and respond accordingly.
 
-**API Integration:** Added client-side caching and loading states to handle API rate limits gracefully.
+**Environment Variables:** Vanilla JavaScript lacks native `.env` support. Created `env.js` file storing API credentials on the `window` object and added it to `.gitignore` to keep credentials private while remaining accessible.
 
 ## Project Structure
 

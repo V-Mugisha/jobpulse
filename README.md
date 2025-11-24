@@ -11,6 +11,9 @@ A lightweight job-market frontend built with vanilla HTML, CSS, and JavaScript. 
 - Detailed job view modal with complete description and company information
 - Direct "Apply" links to employer application pages
 
+## Demo Video Link
+Here is the link to the demo video on [YouTube](https://youtu.be/X7Op1uObrBs)
+
 ## Quick Start
 
 ### Local Setup
@@ -190,3 +193,4 @@ This distributes traffic evenly between both web servers.
 - **Adzuna API** — [Developer Docs](https://developer.adzuna.com/)
 - **Lucide Icons** — [SVG icon library](https://lucide.dev/guide/packages/lucide)
 - **Nginx & HAProxy** — [Server and load balancer infrastructure](https://nginx.org/)
+
